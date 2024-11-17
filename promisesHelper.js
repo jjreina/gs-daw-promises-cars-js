@@ -17,15 +17,24 @@ export let promiseParserToClass = (literObjectCars) => {
   });
 };
 
-export let promiseFilterByYears = (cars) => {
+export let promeseGetCarsByFilters = (cars, year, make, model, type) => {
   return new Promise((resolve, reject) => {
     if (cars !== null && cars !== undefined) {
-      let carsfiltedByYear = cars.filter((car) => {
-        return car.year >= 2010;
+      let carsByYear = cars.filter((car) => {
+        return year !== "ALL" ? car.year >= parseInt(year) : car;
       });
-      resolve(carsfiltedByYear);
+      let carsByMake = carsByYear.filter((car) => {
+        return make !== "ALL" ? car.make === make : car;
+      });
+      let carsByModel = carsByMake.filter((car) => {
+        return model !== "ALL" ? car.model === model : car;
+      });
+      let carsByType = carsByModel.filter((car) => {
+        return type !== "ALL" ? car.type === type : car;
+      });
+      resolve(carsByType);
     } else {
-      reject("promiseFilterByYears: cars is null or undefined");
+      reject("promeseGetCarsByFilters: cars is null or undefined");
     }
   });
 };
