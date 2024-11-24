@@ -1,19 +1,21 @@
 import "./style.css";
-import { cars } from "./data/mockData";
 import {
   promiseParserToClass,
   promeseGetCarsByFilters,
   promiseCreateDivCars,
 } from "./promisesHelper";
 import { createFilter } from "./domHelper";
+import { url, options } from "./api";
 
 const FILTERS = ["Year", "Make", "Model", "Type"];
 
-const uniqueValuesFilters = {
-  year: [...new Set(cars.map((car) => car.year)), "ALL"], // Creamos un array con valores sin repertir
-  make: [...new Set(cars.map((car) => car.make)), "ALL"],
-  model: [...new Set(cars.map((car) => car.model)), "ALL"],
-  type: [...new Set(cars.map((car) => car.type)), "ALL"],
+const getUniqueValuesFilters = (cars) => {
+  return {
+    year: [...new Set(cars.map((car) => car.year)), "ALL"].sort(), // Creamos un array con valores sin repertir
+    make: [...new Set(cars.map((car) => car.make)), "ALL"],
+    model: [...new Set(cars.map((car) => car.model)), "ALL"],
+    type: [...new Set(cars.map((car) => car.type)), "ALL"],
+  };
 };
 
 let containerDiv = document.createElement("div");
@@ -21,11 +23,13 @@ containerDiv.classList.add("container");
 
 document.body.appendChild(containerDiv);
 
-let containerFilter = createFilter(FILTERS, uniqueValuesFilters);
-containerDiv.appendChild(containerFilter);
-
 let divBlock = document.createElement("div");
 divBlock.className = "block";
+
+let setFilters = (cars, containerDiv) => {
+  let containerFilter = createFilter(FILTERS, getUniqueValuesFilters(cars));
+  containerDiv.appendChild(containerFilter);
+};
 
 let getCars = async (cars, year, make, model, type) => {
   let carsClass = await promiseParserToClass(cars);
@@ -57,4 +61,12 @@ filtersSelectorsTag.forEach((select) => {
   });
 });
 
-getCars(cars, "ALL", "ALL", "ALL", "ALL");
+// First time
+const getCarsFromApi = async (containerDiv) => {
+  const response = await fetch(url, options);
+  const cars = await response.json();
+  setFilters(cars, containerDiv);
+  getCars(cars, "ALL", "ALL", "ALL", "ALL");
+};
+
+getCarsFromApi(containerDiv);
