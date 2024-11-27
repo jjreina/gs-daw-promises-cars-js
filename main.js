@@ -29,6 +29,22 @@ divBlock.className = "block";
 let setFilters = (cars, containerDiv) => {
   let containerFilter = createFilter(FILTERS, getUniqueValuesFilters(cars));
   containerDiv.appendChild(containerFilter);
+  let filtersSelectorsTag = document.querySelectorAll("select");
+
+  filtersSelectorsTag.forEach((select) => {
+    select.addEventListener("change", (e) => {
+      // Añadimos un evento change a cada selector
+      divBlock.textContent = ""; // Limpiamos el div de los coches
+      // Obtenemos los coches que cumplen con los filtros
+      getCars(
+        cars,
+        filtersSelectorsTag[0].value, // year
+        filtersSelectorsTag[1].value, // make
+        filtersSelectorsTag[2].value, // model
+        filtersSelectorsTag[3].value // type
+      );
+    });
+  });
 };
 
 let getCars = async (cars, year, make, model, type) => {
@@ -45,21 +61,6 @@ let getCars = async (cars, year, make, model, type) => {
   divBlock.append(...carsDivs);
   containerDiv.appendChild(divBlock);
 };
-
-let filtersSelectorsTag = document.querySelectorAll("select");
-
-filtersSelectorsTag.forEach((select) => {
-  select.addEventListener("change", (e) => {
-    divBlock.textContent = "";
-    getCars(
-      cars,
-      filtersSelectorsTag[0].value, // year
-      filtersSelectorsTag[1].value, // make
-      filtersSelectorsTag[2].value, // model
-      filtersSelectorsTag[3].value // type
-    );
-  });
-});
 
 // First time
 const getCarsFromApi = async (containerDiv) => {
