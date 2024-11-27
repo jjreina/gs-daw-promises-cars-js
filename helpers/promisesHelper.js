@@ -1,4 +1,4 @@
-import { Car } from "./classes/Car";
+import { Car } from "../classes/Car";
 
 export let promiseParserToClass = (literObjectCars) => {
   return new Promise((resolve, reject) => {

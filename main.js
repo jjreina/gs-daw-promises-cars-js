@@ -3,8 +3,8 @@ import {
   promiseParserToClass,
   promeseGetCarsByFilters,
   promiseCreateDivCars,
-} from "./promisesHelper";
-import { createFilter } from "./domHelper";
+} from "./helpers/promisesHelper";
+import { createFilter } from "./helpers/domHelper";
 import { url, options } from "./api";
 
 const FILTERS = ["Year", "Make", "Model", "Type"];
